@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Будешь ли ты моим валентином?</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/833/833472.png" type="image/png">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: pink;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        #container {
+            position: relative;
+        }
+        h1 {
+            font-size: 2em;
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 1.5em;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .button:hover {
+            transform: scale(1.1);
+        }
+        #yes {
+            background-color: lightgreen;
+        }
+        #no {
+            background-color: lightcoral;
+        }
+        #celebration {
+            display: none;
+            font-size: 2.5em;
+            color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-shadow: 2px 2px 10px red;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+        .heart {
+            position: absolute;
+            color: red;
+            font-size: 2em;
+            animation: float 4s linear infinite;
+        }
+        @keyframes float {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) scale(0.5);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <audio id="happyMusic" loop>
+        <source src="happy.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="container">
+        <h1 id="question">Будешь ли ты моим валентином?</h1>
+        <button id="yes" class="button" onclick="celebrate()">Да</button>
+        <button id="no" class="button" onclick="increaseYes()">Нет</button>
+    </div>
+    
+    <div id="celebration">🎉 Ура! Теперь ты мой Валентин! 💖 Ты сделал меня самым счастливым! ❤️ 🎉</div>
+    
+    <script>
+        let noClickCount = 0;
+        let phrases = [
+            "Ты уверен?", 
+            "Может, всё-таки подумаешь?", 
+            "А если я обижусь?", 
+            "Ну пожалуйста!", 
+            "Я же так старался!", 
+            "Ты разобьёшь мне сердце!", 
+            "Последний шанс!", 
+            "Ну всё, теперь выбора нет..."
+        ];
+
+        function increaseYes() {
+            noClickCount++;
+            document.getElementById("question").innerText = phrases[Math.min(noClickCount, phrases.length - 1)];
+            let yesButton = document.getElementById("yes");
+            yesButton.style.fontSize = `${1.5 + noClickCount * 0.5}em`;
+            yesButton.style.padding = `${10 + noClickCount * 10}px`;
+            yesButton.style.width = `${150 + noClickCount * 50}px`;
+            yesButton.style.height = `${50 + noClickCount * 20}px`;
+            
+            if (noClickCount >= phrases.length) {
+                yesButton.style.position = "fixed";
+                yesButton.style.width = "100vw";
+                yesButton.style.height = "100vh";
+                yesButton.style.fontSize = "5em";
+                yesButton.style.left = "0";
+                yesButton.style.top = "0";
+                yesButton.innerText = "ДА!";
+                document.getElementById("no").style.display = "none";
+            }
+        }
+
+        function celebrate() {
+            document.body.style.backgroundColor = "#ffb6c1";
+            document.getElementById("container").style.display = "none";
+            document.getElementById("celebration").style.display = "block";
+            document.getElementById("happyMusic").play();
+            generateHearts();
+            setInterval(generateHearts, 2000);
+        }
+
+        function generateHearts() {
+            for (let i = 0; i < 20; i++) {
+                let heart = document.createElement("div");
+                heart.classList.add("heart");
+                heart.innerHTML = "❤️";
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.top = "100vh";
+                heart.style.animationDuration = Math.random() * 2 + 3 + "s";
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 5000);
+            }
+        }
+    </script>
+</body>
+</html>
